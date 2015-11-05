@@ -39,7 +39,6 @@ public class Config {
     public static final String GCM_REGISTER_URL = "device/register";
     public static final String PING_URL = "device/ping";
     public static final String ROM_PULL_URL = "device/info/rom";
-    public static final String KERNEL_PULL_URL = "device/info/kernel";
 
     public static final String ADMOB_UNIT_ID = "ca-app-pub-0361534644858126/7580389175";
 
@@ -56,30 +55,21 @@ public class Config {
     public static final int ROM_FAILED_NOTIF_ID = 101;
     public static final int ROM_FLASH_NOTIF_ID = 102;
 
-    public static final int KERNEL_NOTIF_ID = 200;
-    public static final int KERNEL_FAILED_NOTIF_ID = 201;
-    public static final int KERNEL_FLASH_NOTIF_ID = 202;
-
     public static final int AD_SHOW_DELAY = 3000;
 
     public static final String BASE_SD_PATH = "/OTA-Updater/download/";
     public static final String BASE_DL_PATH = PropUtils.getSystemSdPath() + BASE_SD_PATH;
     public static final String ROM_DL_PATH = BASE_DL_PATH + "ROM/";
     public static final String ROM_SD_PATH = BASE_SD_PATH + "ROM/";
-    public static final String KERNEL_DL_PATH = BASE_DL_PATH + "kernel/";
-    public static final String KERNEL_SD_PATH = BASE_SD_PATH + "kernel/";
 
     public static final File DL_PATH_FILE = new File(BASE_DL_PATH);
     public static final File ROM_DL_PATH_FILE = new File(ROM_DL_PATH);
-    public static final File KERNEL_DL_PATH_FILE = new File(KERNEL_DL_PATH);
 
     static {
         //noinspection ResultOfMethodCallIgnored
         DL_PATH_FILE.mkdirs();
         //noinspection ResultOfMethodCallIgnored
         ROM_DL_PATH_FILE.mkdirs();
-        //noinspection ResultOfMethodCallIgnored
-        KERNEL_DL_PATH_FILE.mkdirs();
     }
 
     private String gcmRegistrationId = null;
@@ -100,18 +90,14 @@ public class Config {
     private int lastVersion = -1;
     private String lastDevice = null;
     private String lastRomID = null;
-    private String lastKernelID = null;
 
     private int curVersion = -1;
     private String curDevice = null;
     private String curRomID = null;
-    private String curKernelID = null;
 
     private RomInfo storedRomUpdate = null;
-    private KernelInfo storedKernelUpdate = null;
 
     private long romDownloadID = -1;
-    private long kernelDownloadID = -1;
 
     private String username = null;
     private String hmacKey = null;
@@ -149,26 +135,15 @@ public class Config {
             }
         }
 
-        if (PREFS.contains("kernel_info_name")) {
-            if (PropUtils.isKernelOtaEnabled()) {
-                storedKernelUpdate = KernelInfo.FACTORY.fromSharedPrefs(PREFS);
-            } else {
-                clearStoredKernelUpdate();
-            }
-        }
-
         lastVersion  = PREFS.getInt("version", lastVersion);
         lastDevice   = PREFS.getString("device", lastDevice);
         lastRomID    = PREFS.getString("rom_id", lastRomID);
-        lastKernelID = PREFS.getString("kernel_id", lastKernelID);
 
         curVersion  = Utils.getAppVersion(ctx);
         curDevice   = android.os.Build.DEVICE.toLowerCase(Locale.US);
         curRomID    = PropUtils.isRomOtaEnabled() ? PropUtils.getRomOtaID() : null;
-        curKernelID = PropUtils.isKernelOtaEnabled() ? PropUtils.getKernelOtaID() : null;
 
         romDownloadID = PREFS.getLong("romDownloadID", romDownloadID);
-        kernelDownloadID = PREFS.getLong("kernelDownloadID", kernelDownloadID);
     }
     private static Config instance = null;
     public static synchronized Config getInstance(Context ctx) {
@@ -300,7 +275,6 @@ public class Config {
             editor.putInt("version", curVersion);
             editor.putString("device", curDevice);
             editor.putString("rom_id", curRomID);
-            editor.putString("kernel_id", curKernelID);
             editor.apply();
         }
     }
@@ -315,14 +289,7 @@ public class Config {
             romIdUpToDate = false;
         }
 
-        boolean kernelIdUpToDate = true;
-        if (PropUtils.isKernelOtaEnabled()) {
-            kernelIdUpToDate = lastKernelID != null && curKernelID.equals(lastKernelID);
-        } else if (lastKernelID != null) {
-            kernelIdUpToDate = false;
-        }
-
-        return curVersion == lastVersion && curDevice.equals(lastDevice) && romIdUpToDate && kernelIdUpToDate;
+        return curVersion == lastVersion && curDevice.equals(lastDevice) && romIdUpToDate;
     }
 
     public boolean needPing() {
@@ -356,32 +323,6 @@ public class Config {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
             RomInfo.FACTORY.clearFromSharedPrefs(editor);
-            editor.apply();
-        }
-    }
-
-    public boolean hasStoredKernelUpdate() {
-        return storedKernelUpdate != null;
-    }
-
-    public KernelInfo getStoredKernelUpdate() {
-        return storedKernelUpdate;
-    }
-
-    public void storeKernelUpdate(KernelInfo info) {
-        this.storedKernelUpdate = info;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            info.putToSharedPrefs(editor);
-            editor.apply();
-        }
-    }
-
-    public void clearStoredKernelUpdate() {
-        storedKernelUpdate = null;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            KernelInfo.FACTORY.clearFromSharedPrefs(editor);
             editor.apply();
         }
     }
@@ -439,44 +380,21 @@ public class Config {
         if (romDownloadID != -1) storeRomDownloadID(-1);
     }
 
-    public void storeKernelDownloadID(long downloadID) {
-        kernelDownloadID = downloadID;
-        putLong("kernelDownloadID", kernelDownloadID);
-    }
-
-    public long getKernelDownloadID() {
-        return kernelDownloadID;
-    }
-
-    public boolean isDownloadingKernel() {
-        return kernelDownloadID != -1;
-    }
-
-    public void clearDownloadingKernel() {
-        if (romDownloadID != -1) storeKernelDownloadID(-1);
-    }
-
     public void storeDownloadID(BaseInfo info, long downloadID) {
         if (info instanceof RomInfo) {
             storeRomDownloadID(downloadID);
-        } else if (info instanceof KernelInfo) {
-            storeKernelDownloadID(downloadID);
         }
     }
 
     public void storeUpdate(BaseInfo info) {
         if (info instanceof RomInfo) {
             storeRomUpdate((RomInfo) info);
-        } else if (info instanceof KernelInfo) {
-            storeKernelUpdate((KernelInfo) info);
         }
     }
 
     public void clearStoredUpdate(Class<? extends BaseInfo> cls) {
         if (cls.equals(RomInfo.class)) {
             clearStoredRomUpdate();
-        } else if (cls.equals(KernelInfo.class)) {
-            clearStoredKernelUpdate();
         }
     }
 

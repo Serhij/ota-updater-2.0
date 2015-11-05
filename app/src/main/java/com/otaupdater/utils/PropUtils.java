@@ -18,19 +18,11 @@ import java.util.regex.Pattern;
 public class PropUtils {
     public static final String GEN_OTA_PROP = "/system/ota.prop";
     public static final String ROM_OTA_PROP = "/system/rom.ota.prop";
-    public static final String KERNEL_OTA_PROP = "/system/kernel.ota.prop";
 
     private static final boolean ROM_OTA_ENABLED;
     private static String cachedRomID = null;
     private static Date cachedRomDate = null;
     private static String cachedRomVer = null;
-
-    private static /*final*/ boolean KERNEL_OTA_ENABLED;
-    private static String cachedKernelID = null;
-    private static Date cachedKernelDate = null;
-    private static String cachedKernelVer = null;
-    private static String cachedFullKernelVer = null;
-    private static String cachedKernelUname = null;
 
     private static String cachedSystemSdPath = null;
     private static String cachedRecoverySdPath = null;
@@ -40,16 +32,6 @@ public class PropUtils {
 
     static {
         ROM_OTA_ENABLED = new File("/system/rom.ota.prop").exists() || LegacyCompat.isRomOtaEnabled();
-
-        KERNEL_OTA_ENABLED = new File("/system/kernel.ota.prop").exists();
-        if (KERNEL_OTA_ENABLED) {
-            String fullVer = PropUtils.getFullKernelVersion();
-            String fullOtaVer = PropUtils.getFullKernelOtaVersion();
-            if (!fullVer.equals(fullOtaVer)) {
-                KERNEL_OTA_ENABLED = false;
-                //TODO maybe try to delete the file?
-            }
-        }
     }
 
     // from AOSP source: packages/apps/Settings/src/com/android/settings/DeviceInfoSettings.java
@@ -68,10 +50,6 @@ public class PropUtils {
 
     public static boolean isRomOtaEnabled() {
         return ROM_OTA_ENABLED;
-    }
-
-    public static boolean isKernelOtaEnabled() {
-        return KERNEL_OTA_ENABLED;
     }
 
     public static String getRomOtaID() {
@@ -119,65 +97,6 @@ public class PropUtils {
         if (aokpVer.stdout.length() != 0) return aokpVer.stdout;
 
         return Build.DISPLAY;
-    }
-
-    public static String getKernelOtaID() {
-        if (!KERNEL_OTA_ENABLED) return null;
-        if (cachedKernelID == null) {
-            readKernelOtaProp();
-        }
-        return cachedKernelID;
-    }
-
-    public static Date getKernelOtaDate() {
-        if (!KERNEL_OTA_ENABLED) return null;
-        if (cachedKernelDate == null) {
-            readKernelOtaProp();
-        }
-        return cachedKernelDate;
-    }
-
-    public static String getKernelOtaVersion() {
-        if (!KERNEL_OTA_ENABLED) return null;
-        if (cachedKernelVer == null) {
-            readKernelOtaProp();
-        }
-        return cachedKernelVer;
-    }
-
-    public static String getKernelVersion() {
-        if (cachedKernelUname == null) {
-            ShellCommand cmd = new ShellCommand();
-            CommandResult procVerResult = cmd.sh.runWaitFor("cat /proc/version");
-            if (procVerResult.stdout.length() == 0) return null;
-
-            Pattern p = Pattern.compile(PROC_VERSION_REGEX);
-            Matcher m = p.matcher(procVerResult.stdout);
-
-            if (!m.matches() || m.groupCount() < 4) {
-                return null;
-            } else {
-                cachedKernelUname = (new StringBuilder(m.group(1)).append("\n").append(
-                        m.group(2)).append(" ").append(m.group(3)).append("\n")
-                        .append(m.group(4))).toString();
-            }
-        }
-        return cachedKernelUname;
-    }
-
-    public static String getFullKernelOtaVersion() {
-        if (!KERNEL_OTA_ENABLED) return null;
-        if (cachedFullKernelVer == null) {
-            readKernelOtaProp();
-        }
-        return cachedFullKernelVer;
-    }
-
-    public static String getFullKernelVersion() {
-        ShellCommand cmd = new ShellCommand();
-        CommandResult procVerResult = cmd.sh.runWaitFor("cat /proc/version");
-        if (procVerResult.stdout.length() == 0) return null;
-        return procVerResult.stdout;
     }
 
     public static String getSystemSdPath() {
@@ -260,24 +179,6 @@ public class PropUtils {
             cachedRomDate = Utils.parseDate(romOtaProp.getString("otatime"));
         } catch (JSONException e) {
             Log.e(Config.LOG_TAG + "ReadOTAProp", "Error in rom.ota.prop file!");
-        }
-    }
-
-    private static void readKernelOtaProp() {
-        if (!KERNEL_OTA_ENABLED) return;
-
-        ShellCommand cmd = new ShellCommand();
-        CommandResult catResult = cmd.sh.runWaitFor("cat " + KERNEL_OTA_PROP);
-        if (catResult.stdout.length() == 0) return;
-
-        try {
-            JSONObject kernelOtaProp = new JSONObject(catResult.stdout);
-            cachedKernelID = kernelOtaProp.getString("otaid");
-            cachedKernelVer = kernelOtaProp.getString("otaver");
-            cachedKernelDate = Utils.parseDate(kernelOtaProp.getString("otatime"));
-            cachedFullKernelVer = kernelOtaProp.getString("fullver");
-        } catch (JSONException e) {
-            Log.e(Config.LOG_TAG + "ReadOTAProp", "Error in kernel.ota.prop file!");
         }
     }
 

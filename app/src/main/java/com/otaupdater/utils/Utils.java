@@ -241,20 +241,6 @@ public class Utils {
                     }
                 }
 
-                if (PropUtils.isKernelOtaEnabled()) {
-                    KernelInfo info = KernelInfo.FACTORY.fromJSON(respObj.optJSONObject(KernelInfo.KEY_NAME));
-                    if (info != null && info.isUpdate()) {
-                        cfg.storeKernelUpdate(info);
-                        if (cfg.getShowNotif()) {
-                            info.showUpdateNotif(ctx);
-                        } else {
-                            Log.v(Config.LOG_TAG + "DeviceRegister", "got kernel update response, notif not shown");
-                        }
-                    } else {
-                        cfg.clearStoredKernelUpdate();
-                        KernelInfo.FACTORY.clearUpdateNotif(ctx);
-                    }
-                }
             }
 
             @Override

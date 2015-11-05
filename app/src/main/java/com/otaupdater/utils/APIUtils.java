@@ -54,7 +54,6 @@ public class APIUtils {
             data.put("reg_id", cfg.getGcmRegistrationId());
 
             if (PropUtils.isRomOtaEnabled()) data.put("rom_id", PropUtils.getRomOtaID());
-            if (PropUtils.isKernelOtaEnabled()) data.put("kernel_id", PropUtils.getKernelOtaID());
 
             data.put("app_version", Integer.toString(Utils.getAppVersion(ctx)));
         } catch (JSONException ignored) {
@@ -82,22 +81,6 @@ public class APIUtils {
         }
 
         new APITask(ctx, Config.ROM_PULL_URL, data, callback).execute();
-    }
-
-    public static void fetchKernelInfo(Context ctx, APICallback callback) {
-        if (!PropUtils.isKernelOtaEnabled()) {
-            if (callback != null) callback.onError(ctx.getString(R.string.kernel_unsupported), null);
-            return;
-        }
-
-        JSONObject data = new JSONObject();
-        try {
-            data.put("device", Utils.getDevice());
-            data.put("rom_id", PropUtils.getRomOtaID());
-        } catch (JSONException ignored) {
-        }
-
-        new APITask(ctx, Config.KERNEL_PULL_URL, data, callback).execute();
     }
 
     private static String getOAuthToken(Context ctx) {

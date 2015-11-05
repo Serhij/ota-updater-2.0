@@ -35,7 +35,6 @@ import android.widget.Toast;
 import com.otaupdater.utils.BaseDownloadDialogActivity;
 import com.otaupdater.utils.BaseInfo;
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.KernelInfo;
 import com.otaupdater.utils.PropUtils;
 import com.otaupdater.utils.RomInfo;
 
@@ -50,13 +49,11 @@ import java.util.Locale;
 
 public class DownloadsActivity extends BaseDownloadDialogActivity implements ActionBar.OnNavigationListener {
     public static final String FLASH_ROM_ACTION = "com.otaupdater.action.FLASH_ROM_ACTION";
-    public static final String FLASH_KERNEL_ACTION = "com.otaupdater.action.FLASH_KERNEL_ACTION";
 
     public static final String EXTRA_FLASH_INFO = "flash_info";
 
     public static final String EXTRA_GOTO_TYPE = "goto_type";
     public static final int GOTO_TYPE_ROM = 0;
-    public static final int GOTO_TYPE_KERNEL = 1;
 
     private final ArrayList<Dialog> dlgs = new ArrayList<Dialog>();
 
@@ -110,9 +107,6 @@ public class DownloadsActivity extends BaseDownloadDialogActivity implements Act
             if (action.equals(FLASH_ROM_ACTION)) {
                 state = GOTO_TYPE_ROM;
                 showFlashDialog(RomInfo.FACTORY.fromIntent(getIntent()));
-            } else if (action.equals(FLASH_KERNEL_ACTION)) {
-                state = GOTO_TYPE_KERNEL;
-                showFlashDialog(KernelInfo.FACTORY.fromIntent(getIntent()));
             } else {
                 state = getIntent().getIntExtra(EXTRA_GOTO_TYPE, state);
             }

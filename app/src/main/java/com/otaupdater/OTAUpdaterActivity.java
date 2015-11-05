@@ -41,7 +41,6 @@ import android.view.MenuItem;
 import com.android.vending.billing.IInAppBillingService;
 import com.otaupdater.utils.BaseDownloadDialogActivity;
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.KernelInfo;
 import com.otaupdater.utils.PropUtils;
 import com.otaupdater.utils.RomInfo;
 import com.otaupdater.utils.Utils;
@@ -55,13 +54,11 @@ import java.util.ArrayList;
 
 public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
     public static final String ROM_NOTIF_ACTION = "com.otaupdater.action.ROM_NOTIF_ACTION";
-    public static final String KERNEL_NOTIF_ACTION = "com.otaupdater.action.KERNEL_NOTIF_ACTION";
 
     public static final String EXTRA_FLAG_DOWNLOAD_DIALOG = "SHOW_DOWNLOAD_DIALOG";
 
     public static final String KEY_TAB = "tab";
     private int romTabIdx = 0;
-    private int kernelTabIdx = 0;
 
     private Config cfg;
 
@@ -191,7 +188,7 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
         Utils.updateDeviceRegistration(this);
         CheckinReceiver.setDailyAlarm(this);
 
-        if (!PropUtils.isRomOtaEnabled() && !PropUtils.isKernelOtaEnabled() && !cfg.getIgnoredUnsupportedWarn()) {
+        if (!PropUtils.isRomOtaEnabled() && !cfg.getIgnoredUnsupportedWarn()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.alert_unsupported_title);
             builder.setMessage(R.string.alert_unsupported_message);
@@ -243,23 +240,14 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
         bar.setTitle(R.string.app_name);
 
         TabsAdapter mTabsAdapter = new TabsAdapter(this, mViewPager);
-        mTabsAdapter.addTab(bar.newTab().setText(R.string.main_about), AboutTab.class);
 
         ActionBar.Tab romTab = bar.newTab().setText(R.string.main_rom);
         if (cfg.hasStoredRomUpdate()) romTab.setIcon(R.drawable.ic_action_warning);
         romTabIdx = mTabsAdapter.addTab(romTab, ROMTab.class);
 
-        ActionBar.Tab kernelTab = bar.newTab().setText(R.string.main_kernel);
-        if (cfg.hasStoredKernelUpdate()) kernelTab.setIcon(R.drawable.ic_action_warning);
-        kernelTabIdx = mTabsAdapter.addTab(kernelTab, KernelTab.class);
-
         if (!handleNotifAction(getIntent())) {
             if (cfg.hasStoredRomUpdate() && !cfg.isDownloadingRom()) {
                 cfg.getStoredRomUpdate().showUpdateNotif(this);
-            }
-
-            if (cfg.hasStoredKernelUpdate() && !cfg.isDownloadingKernel()) {
-                cfg.getStoredKernelUpdate().showUpdateNotif(this);
             }
 
             if (savedInstanceState != null) {
@@ -336,14 +324,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
         }
     }
 
-    public void updateKernelTabIcon(boolean update) {
-        if (update) {
-            bar.getTabAt(kernelTabIdx).setIcon(R.drawable.ic_action_warning);
-        } else {
-            bar.getTabAt(kernelTabIdx).setIcon(null);
-        }
-    }
-
     private boolean handleNotifAction(Intent intent) {
         String action = intent.getAction();
         if (ROM_NOTIF_ACTION.equals(action)) {
@@ -355,17 +335,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
             } else {
                 RomInfo info = RomInfo.FACTORY.fromIntent(intent);
                 if (info == null) info = cfg.getStoredRomUpdate();
-                if (info != null) info.showUpdateDialog(this, this);
-            }
-        } else if (KERNEL_NOTIF_ACTION.equals(action)) {
-            KernelInfo.FACTORY.clearUpdateNotif(this);
-            bar.setSelectedNavigationItem(kernelTabIdx);
-
-            if (intent.getBooleanExtra(EXTRA_FLAG_DOWNLOAD_DIALOG, false)) {
-                DownloadBarFragment.showDownloadingDialog(this, cfg.getKernelDownloadID(), this);
-            } else {
-                KernelInfo info = KernelInfo.FACTORY.fromIntent(intent);
-                if (info == null) info = cfg.getStoredKernelUpdate();
                 if (info != null) info.showUpdateDialog(this, this);
             }
         } else {

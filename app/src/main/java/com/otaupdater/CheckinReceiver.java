@@ -28,7 +28,6 @@ import android.util.Log;
 import com.otaupdater.utils.APIUtils;
 import com.otaupdater.utils.BaseInfo;
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.KernelInfo;
 import com.otaupdater.utils.PropUtils;
 import com.otaupdater.utils.RomInfo;
 import com.otaupdater.utils.Utils;
@@ -66,29 +65,6 @@ public class CheckinReceiver extends BroadcastReceiver {
                 Log.v(Config.LOG_TAG + "Receiver", "No stored rom update");
             }
 
-            if (cfg.hasStoredKernelUpdate()) {
-                if (PropUtils.isKernelOtaEnabled()) {
-                    KernelInfo info = cfg.getStoredKernelUpdate();
-                    if (info.isUpdate()) {
-                        if (cfg.getShowNotif()) {
-                            info.showUpdateNotif(context);
-                            Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update");
-                        } else {
-                            Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, notif not shown");
-                        }
-                    } else {
-                        Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored kernel update");
-                        cfg.clearStoredKernelUpdate();
-                        KernelInfo.FACTORY.clearUpdateNotif(context);
-                    }
-                } else {
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, not OTA-kernel");
-                    cfg.clearStoredKernelUpdate();
-                }
-            } else {
-                Log.v(Config.LOG_TAG + "Receiver", "No stored kernel update");
-            }
-
             setDailyAlarm(context);
         }
 
@@ -116,22 +92,6 @@ public class CheckinReceiver extends BroadcastReceiver {
                 });
             }
 
-            if (PropUtils.isKernelOtaEnabled()) {
-                final WakeLock kernelWL = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, CheckinReceiver.class.getName());
-                kernelWL.acquire();
-
-                APIUtils.fetchKernelInfo(context, new BaseInfo.InfoLoadAdapter<KernelInfo>(KernelInfo.class, context) {
-                    @Override
-                    public void onInfoLoaded(KernelInfo info) {
-                        KernelTab.notifyActiveFragment();
-                    }
-
-                    @Override
-                    public void onComplete(boolean success) {
-                        kernelWL.release();
-                    }
-                });
-            }
         }
     }
 

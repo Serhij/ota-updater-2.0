@@ -27,12 +27,10 @@ import android.support.v4.app.NotificationCompat;
 
 import com.otaupdater.utils.BaseInfo;
 import com.otaupdater.utils.DownloadStatus;
-import com.otaupdater.utils.KernelInfo;
 import com.otaupdater.utils.RomInfo;
 
 public class DownloadReceiver extends BroadcastReceiver {
     public static final String DL_ROM_ACTION = "com.otaupdater.action.DL_ROM_ACTION";
-    public static final String DL_KERNEL_ACTION = "com.otaupdater.action.DL_KERNEL_ACTION";
 
     public static final String CLEAR_DL_ACTION = "com.otaupdater.action.CLEAR_DL_ACTION";
 
@@ -44,9 +42,6 @@ public class DownloadReceiver extends BroadcastReceiver {
         if (action.equals(DL_ROM_ACTION)) {
             RomInfo.FACTORY.clearUpdateNotif(context);
             RomInfo.FACTORY.fromIntent(intent).startDownload(context);
-        } else if (action.equals(DL_KERNEL_ACTION)) {
-            KernelInfo.FACTORY.clearUpdateNotif(context);
-            KernelInfo.FACTORY.fromIntent(intent).startDownload(context);
         } else if (action.equals(CLEAR_DL_ACTION)) {
             if (intent.hasExtra(DownloadManager.EXTRA_DOWNLOAD_ID)) {
                 DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);

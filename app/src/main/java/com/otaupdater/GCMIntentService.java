@@ -24,7 +24,6 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.KernelInfo;
 import com.otaupdater.utils.PropUtils;
 import com.otaupdater.utils.RomInfo;
 
@@ -65,25 +64,6 @@ public class GCMIntentService extends IntentService {
                 }
 
                 if (cfg.hasProKey() && cfg.getAutoDlState()) info.startDownload(context);
-            } else if (extras.containsKey(KernelInfo.KEY_NAME)) {
-                if (!PropUtils.isKernelOtaEnabled()) return;
-
-                KernelInfo info = KernelInfo.FACTORY.fromBundle(extras);
-
-                if (!info.isUpdate()) {
-                    Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, not update");
-                    cfg.clearStoredKernelUpdate();
-                    KernelInfo.FACTORY.clearUpdateNotif(context);
-                    return;
-                }
-
-                cfg.storeKernelUpdate(info);
-                if (cfg.getShowNotif()) {
-                    Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message");
-                    info.showUpdateNotif(context);
-                } else {
-                    Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, notif not shown");
-                }
 
                 if (cfg.hasProKey() && cfg.getAutoDlState()) info.startDownload(context);
             } else {

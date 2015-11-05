@@ -108,7 +108,7 @@ public class DownloadListFragment extends ListFragment {
     }
 
     protected void updateFileList() {
-        File dir = state == 0 ? Config.ROM_DL_PATH_FILE : Config.KERNEL_DL_PATH_FILE;
+        File dir = Config.ROM_DL_PATH_FILE;
         File[] files = dir.listFiles();
         fileList.clear();
         for (File file : files) {

@@ -51,8 +51,6 @@ public class DownloadStatus {
                         Config cfg = Config.getInstance(ctx);
                         if (cfg.isDownloadingRom() && cfg.getRomDownloadID() == id) {
                             status.info = cfg.getStoredRomUpdate();
-                        } else if (cfg.isDownloadingKernel() && cfg.getKernelDownloadID() == id) {
-                            status.info = cfg.getStoredKernelUpdate();
                         }
 
                         status.checkDownloadedFile();
