@@ -37,3 +37,9 @@ dependencies {
     compile 'com.intellij:annotations:+@jar'
     compile files('libs/commons-net-3.1.jar')
 }
+
+android { 
+  lintOptions { 
+    abortOnError false 
+  }
+}
