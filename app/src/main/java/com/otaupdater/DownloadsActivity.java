@@ -254,47 +254,26 @@ public class DownloadsActivity extends BaseDownloadDialogActivity implements Act
         dlg.show();
     }
 
-    private void flashFiles(String[] files, boolean backup, boolean wipeCache, boolean wipeData) {
+    private void flashFiles(String[] files, boolean backup, boolean wipeCache, boolean wipeDalvik) {
         try {
             Process p = Runtime.getRuntime().exec("su");
             DataOutputStream os = new DataOutputStream(p.getOutputStream());
             os.writeBytes("mkdir -p /cache/recovery/\n");
-            os.writeBytes("rm -f /cache/recovery/command\n");
-            os.writeBytes("rm -f /cache/recovery/extendedcommand\n");
-            os.writeBytes("echo 'boot-recovery' >> /cache/recovery/command\n");
+            os.writeBytes("rm -f /cache/recovery/openrecoveryscript\n");
 
-            //no official cwm for sony, so use extendedcommand. sony devices cannot use regular command file
-            if (Build.MANUFACTURER.toLowerCase(Locale.US).contains("sony")) {
                 if (backup) {
-                    os.writeBytes("echo 'backup_rom /sdcard/clockworkmod/backup/ota_" +
-                        new SimpleDateFormat("yyyy-MM-dd_HH.mm", Locale.US).format(new Date()) +
-                        "' >> /cache/recovery/extendedcommand\n");
+                    os.writeBytes("echo 'backup SDBOM' >> /cache/recovery/openrecoveryscript\n");
                 }
-                if (wipeData) {
-                    os.writeBytes("echo 'format(\"/data\");' >> /cache/recovery/extendedcommand\n");
+                if (wipeDalvik) {
+                    os.writeBytes("echo 'wipe dalvik' >> /cache/recovery/openrecoveryscript\n");
                 }
                 if (wipeCache) {
-                    os.writeBytes("echo 'format(\"/cache\");' >> /cache/recovery/extendedcommand\n");
-                }
-
-                for (String file : files) {
-                    os.writeBytes("echo 'install_zip(\"" + file + "\");' >> /cache/recovery/extendedcommand\n");
-                }
-            } else {
-                if (backup) {
-                    os.writeBytes("echo '--nandroid' >> /cache/recovery/command\n");
-                }
-                if (wipeData) {
-                    os.writeBytes("echo '--wipe_data' >> /cache/recovery/command\n");
-                }
-                if (wipeCache) {
-                    os.writeBytes("echo '--wipe_cache' >> /cache/recovery/command\n");
+                    os.writeBytes("echo 'wipe cache' >> /cache/recovery/openrecoveryscript\n");
                 }
 
                 for (String file: files) {
-                    os.writeBytes("echo '--update_package=" + file + "' >> /cache/recovery/command\n");
+                    os.writeBytes("echo 'install " + file + "' >> /cache/recovery/openrecoveryscript\n");
                 }
-            }
 
             String rebootCmd = PropUtils.getRebootCmd();
             if (!rebootCmd.equals("$$NULL$$")) {
