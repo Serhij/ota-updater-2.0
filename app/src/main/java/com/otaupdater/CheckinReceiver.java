@@ -67,6 +67,31 @@ public class CheckinReceiver extends BroadcastReceiver {
 
             setDailyAlarm(context);
         }
+
+        Utils.updateDeviceRegistration(context);
+
+        if (!Utils.checkPlayServices(context)) {
+            Log.v(Config.LOG_TAG + "Receiver", "No market, using pull method");
+
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+
+            if (PropUtils.isRomOtaEnabled()) {
+                final WakeLock romWL = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, CheckinReceiver.class.getName());
+                romWL.acquire();
+
+                APIUtils.fetchRomInfo(context, new BaseInfo.InfoLoadAdapter<RomInfo>(RomInfo.class, context) {
+                    @Override
+                    public void onInfoLoaded(RomInfo info) {
+                        ROMTab.notifyActiveFragment();
+                    }
+
+                    @Override
+                    public void onComplete(boolean success) {
+                        romWL.release();
+                    }
+                });
+            }
+		}
     }
 
     public static void setDailyAlarm(Context ctx) {

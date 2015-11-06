@@ -126,6 +126,7 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
             }
         }
 
+        Utils.updateDeviceRegistration(this);
         CheckinReceiver.setDailyAlarm(this);
 
         if (!PropUtils.isRomOtaEnabled() && !cfg.getIgnoredUnsupportedWarn()) {

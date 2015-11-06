@@ -60,6 +60,8 @@ public class Utils {
     private static final Random random = new SecureRandom();
     private static final SimpleDateFormat OTA_DATE = new SimpleDateFormat("yyyyMMdd-kkmm", Locale.US);
 
+    private static Boolean cachedPlayServicesCheck = null;
+
     private Utils() { }
 
     public static int getAppVersion(Context ctx) {
@@ -124,6 +126,36 @@ public class Utils {
         return "";
     }
 
+    public static String hmac(String str, String key) {
+        try {
+            Mac mac = Mac.getInstance(Config.HMAC_ALGORITHM);
+            String salt = randomSaltString(mac.getMacLength());
+            mac.init(new SecretKeySpec(key.getBytes(), mac.getAlgorithm()));
+            return byteArrToStr(mac.doFinal((salt + str + salt).getBytes("UTF-8"))) + salt;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean checkPlayServices(Context ctx) {
+        if (cachedPlayServicesCheck == null) {
+            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
+            if (resultCode == ConnectionResult.SUCCESS) {
+                cachedPlayServicesCheck = true;
+            } else {
+                if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                    Log.v(Config.LOG_TAG + "checkPlayServices", "Play Services error: " + GooglePlayServicesUtil.getErrorString(resultCode));
+                } else {
+                    Log.v(Config.LOG_TAG + "checkPlayServices", "Device not supported");
+                }
+                cachedPlayServicesCheck = false;
+            }
+        }
+
+        return cachedPlayServicesCheck;
+    }
+
     public static boolean dataAvailable(Context ctx) {
         ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -149,6 +181,91 @@ public class Utils {
     public static String formatDate(Date date) {
         if (date == null) return null;
         return OTA_DATE.format(date);
+    }
+
+    public static void updateDeviceRegistration(final Context ctx) {
+        final Config cfg = Config.getInstance(ctx);
+
+        final APIUtils.APIAdapter regCallback = new APIUtils.APIAdapter() {
+            @Override
+            public void onSuccess(String message, JSONObject respObj) {
+                cfg.setPingedCurrent();
+
+                if (PropUtils.isRomOtaEnabled()) {
+                    RomInfo info = RomInfo.FACTORY.fromJSON(respObj.optJSONObject(RomInfo.KEY_NAME));
+                    if (info != null && info.isUpdate()) {
+                        cfg.storeRomUpdate(info);
+                        if (cfg.getShowNotif()) {
+                            info.showUpdateNotif(ctx);
+                        } else {
+                            Log.v(Config.LOG_TAG + "DeviceRegister", "got rom update response, notif not shown");
+                        }
+                    } else {
+                        cfg.clearStoredRomUpdate();
+                        RomInfo.FACTORY.clearUpdateNotif(ctx);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onError(String message, JSONObject respObj) {
+                cfg.setGcmRegistrationId(null); //TODO maybe do something better?
+                Log.w(Config.LOG_TAG + "DeviceRegister", "error registering with server: " + message);
+            }
+        };
+
+        if (checkPlayServices(ctx)) {
+            String regId = cfg.getGcmRegistrationId();
+            if (regId == null) {
+                Log.v(Config.LOG_TAG + "DeviceRegister", "Not registered, registering for GCM...");
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        try {
+                            GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ctx);
+                            String regID = gcm.register(Config.GCM_SENDER_ID);
+
+                            cfg.setGcmRegistrationId(regID);
+                            Log.v(Config.LOG_TAG + "DeviceRegister", "GCM registered");
+
+                            APIUtils.updateDeviceRegistration(ctx, regCallback);
+                        } catch (Exception ex) {
+                            Log.e(Config.LOG_TAG + "DeviceRegister", "Error registering GCM: " + ex.getMessage());
+                        }
+                        return null;
+                    }
+                }.execute();
+            } else if (!cfg.upToDate()) {
+                Log.v(Config.LOG_TAG + "DeviceRegister", "Already GCM registered, out-of-date");
+                cfg.setValuesToCurrent();
+                APIUtils.updateDeviceRegistration(ctx, regCallback);
+            } else if (cfg.needPing()) {
+                Log.v(Config.LOG_TAG + "DeviceRegister", "Already GCM registered, need to ping");
+                APIUtils.doPing(ctx, new APIUtils.APIAdapter() {
+                    @Override
+                    public void onSuccess(String message, JSONObject respObj) {
+                        cfg.setPingedCurrent();
+                    }
+                });
+            } else {
+                Log.v(Config.LOG_TAG + "DeviceRegister", "Already GCM registered, no ping necessary");
+            }
+        } else if (!cfg.upToDate()) {
+            Log.v(Config.LOG_TAG + "DeviceRegister", "Already registered, out-of-date");
+            cfg.setValuesToCurrent();
+            APIUtils.updateDeviceRegistration(ctx, regCallback);
+        } else if (cfg.needPing()) {
+            Log.v(Config.LOG_TAG + "DeviceRegister", "Already registered, need to ping");
+            APIUtils.doPing(ctx, new APIUtils.APIAdapter() {
+                @Override
+                public void onSuccess(String message, JSONObject respObj) {
+                    cfg.setPingedCurrent();
+                }
+            });
+        } else {
+            Log.v(Config.LOG_TAG + "DeviceRegister", "Already registered, no ping necessary");
+        }
     }
 
     private static String device = null;

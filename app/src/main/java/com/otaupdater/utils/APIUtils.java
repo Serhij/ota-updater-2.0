@@ -51,6 +51,7 @@ public class APIUtils {
         try {
             data.put("device", Utils.getDevice());
             data.put("device_id", Utils.getDeviceID(ctx));
+            data.put("reg_id", cfg.getGcmRegistrationId());
 
             if (PropUtils.isRomOtaEnabled()) data.put("rom_id", PropUtils.getRomOtaID());
 

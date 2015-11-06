@@ -71,6 +71,11 @@ public class Config {
         ROM_DL_PATH_FILE.mkdirs();
     }
 
+    private String gcmRegistrationId = null;
+    private boolean gcmRegVersionOverride = false;
+    private Date lastPingDate = null;
+
+
     private boolean showNotif = true;
     private boolean wifiOnlyDl = true;
     private boolean autoDl = false;
@@ -102,6 +107,9 @@ public class Config {
         assert ctx != null;
         PREFS = ctx.getSharedPreferences(PREFS_NAME, 0);
 
+        gcmRegistrationId = PREFS.getString("gcmRegistrationId", gcmRegistrationId);
+        lastPingDate = PREFS.contains("lastPingDate") ? new Date(PREFS.getLong("lastPingDate", 0)) : null;
+
         showNotif = PREFS.getBoolean("showNotif", showNotif);
         wifiOnlyDl = PREFS.getBoolean("wifiOnlyDl", wifiOnlyDl);
         autoDl = PREFS.getBoolean("autoDl", autoDl);
@@ -132,6 +140,22 @@ public class Config {
     public static synchronized Config getInstance(Context ctx) {
         if (instance == null) instance = new Config(ctx);
         return instance;
+    }
+
+    public String getGcmRegistrationId() {
+        if (gcmRegistrationId == null) return null;
+        if (lastVersion != curVersion && !gcmRegVersionOverride) return null;
+        return gcmRegistrationId;
+    }
+
+    public void setGcmRegistrationId(String id) {
+        this.gcmRegistrationId = id;
+        this.gcmRegVersionOverride = true;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putString("gcmRegistrationId", gcmRegistrationId);
+            editor.apply();
+        }
     }
 
     public boolean getShowNotif() {
@@ -223,6 +247,15 @@ public class Config {
         }
 
         return curVersion == lastVersion && curDevice.equals(lastDevice) && romIdUpToDate;
+    }
+
+    public boolean needPing() {
+        return lastPingDate == null || (new Date().getTime() - lastPingDate.getTime()) > MIN_PING_TIME;
+    }
+
+    public void setPingedCurrent() {
+        lastPingDate = new Date();
+        putLong("lastPingDate", lastPingDate.getTime());
     }
 
     public boolean hasStoredRomUpdate() {
