@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) 2014 OTA Update Center
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+
+    <string name="app_name">OTA Updater</string>
+    <string name="app_license">Ліцензія</string>
+    <string name="app_contrib">Автори</string>
+    <string name="app_downloads">Завантаження</string>
+    <string name="app_settings">Налаштування</string>
+
+    <string name="download">Завантажити</string>
+    <string name="retry">Повторити</string>
+    <string name="flash">Прошити</string>
+    <string name="delete">Видалити</string>
+    <string name="ignore">Ігнорувати</string>
+    <string name="exit">Вихід</string>
+    <string name="close">Закрити</string>
+    <string name="hide">Сховати</string>
+    <string name="install">Встановити</string>
+    <string name="icon">Значок</string>
+
+    <string name="main_device">Пристрій</string>
+    <string name="main_rom">Прошивка</string>
+    <string name="main_otaid">OTA Updater ID</string>
+
+    <string name="rom_download_ticker">Доступне оновлення прошивки</string>
+    <string name="rom_download_title">Доступне оновлення прошивки: %1$s</string>
+    <string name="rom_download_details">Доступне оновлення прошивки\n\nВерсія: %1$s\nЗміни:\n%2$s</string>
+    <string name="rom_download_progress">Завантаження оновлення прошивки</string>
+    <string name="rom_download_failed">Не вдалося завантажити оновлення прошивки</string>
+    <string name="rom_download_done">Завантаження оновлення прошивки завершено</string>
+    <string name="rom_download_alert_title">Завантаження оновлення прошивки (%1$s версія %2$s)</string>
+    <string name="rom_toast_no_update">На даний час оновлення прошивки відсутні</string>
+    <string name="rom_update_to">Це оновлення оновить Вашу прошивку (%1$s) до версії %2$s</string>
+    <string name="rom_version">Версія прошивки</string>
+    <string name="rom_unsupported">Непідтримувана прошивка</string>
+    <string name="rom_unsupported_summary">Розробник не додав до прошивки підтримку OTA Updater! Будь ласка, попросіть його (люб\'язно) додати підтримку, перш ніж використовувати цю програму!\n\n(відсутній rom.ota.prop)</string>
+
+    <string name="alert_nodata_title">Відсутнє мережеве з\'єднання!</string>
+    <string name="alert_nodata_message">У Вас відсутнє підключення до мережі.\nБудь ласка, увімкніть Wi-Fi або Мобільний інтернет, щоб перевірити наявність та завантажити оновлення.</string>
+    <string name="alert_nowifi_title">Відсутнє підключення по Wi-Fi!</string>
+    <string name="alert_nowifi_message">Ви використовуєте Мобільний інтернет.\nЦя програма використовує значний обсяг трафіку для завантаження оновлень прошивки.\nРекомендується увімкнути Wi-Fi, щоб уникнути додаткових витрат.</string>
+    <string name="alert_wifi_settings">Налаштування Wi-Fi</string>
+
+    <string name="alert_install_title">Встановити ZIP</string>
+    <string name="alert_install_message">Встановлення цього оновлення здійснить перезавантаження до recovery для прошивки ZIP-файлу. Після встановлення, система автоматично перезавантажиться.</string>
+    <string name="alert_noinstall_message">Нажаль, прошивки на Вашому пристрої мають бути прошиті вручну.\nБудь ласка, скористайтеся відповідним методом для прошивки свого пристрою\n\nФайл .zip знаходиться: %1$s</string>
+    <string name="alert_update_title">Доступне оновлення прошивки!</string>
+    <string name="alert_downloading">Завантаження…</string>
+    <string name="alert_unsupported_title">Непідтримувана прошивка</string>
+    <string name="alert_unsupported_message">Розробник не додав до прошивки підтримку OTA Updater! Будь ласка, попросіть його (люб\'язно) додати підтримку, перш ніж використовувати цю програму!\n\n(відсутній rom.ota.prop)</string>
+    <string name="alert_changelog">Переглянути зміни</string>
+    <string name="alert_changelog_title">Зміни у версії %1$s</string>
+
+    <string name="menu_downloads">Завантаження</string>
+    <string name="menu_settings">Налаштування</string>
+
+    <string name="notif_source">OTA Update</string>
+    <string name="notif_completed">Завантаження завершене. Натисніть для прошивки оновлення.</string>
+
+    <string name="toast_delete">Файл успішно видалено</string>
+    <string name="toast_delete_error">Виникла проблема під час видалення вибраного фвйлу</string>
+    <string name="toast_file_error">Помилка завантаження файлу</string>
+    <string name="toast_nosd_shared">Ваша SD-карта недоступна - змонтована як USB Накопичувач</string>
+    <string name="toast_nosd_error">Ваша SD-карта недоступна</string>
+    <string name="toast_update_fetch_error">Помилка отримання інформації про оновлення</string>
+    <string name="toast_downloading">Завантаження триває, перевірте стан у сповіщеннях…</string>
+
+    <string name="updates_avail_title">Доступні оновлення</string>
+    <string name="updates_checking">Перевірка доступних оновлень…</string>
+    <string name="updates_none">Немає доступних оновлень. Натисніть для перевірки.</string>
+    <string name="update_fetch_error">Помилка отримання інформації про оновлення: %1$s</string>
+    <string name="updates_new">Нове оновлення: %1$s (версія %2$s)\nНатисніть для завантаження/прошивки!</string>
+
+    <string name="downloads_rom_label">Завантаження оновлення прошивки</string>
+    <string name="downloads_size_progress_b">%1$.1f%% (%2$d / %3$d байт)</string>
+    <string name="downloads_size_progress_kb">%1$.1f%% (%2$d / %3$d КБ)</string>
+    <string name="downloads_size_progress_mb">%1$.1f%% (%2$d / %3$d МБ)</string>
+    <string name="downloads_size_progress_gb">%1$.1f%% (%2$d / %3$d ГБ)</string>
+    <string name="downloads_size_progress_unknown_b">%1$.1f%% (%2$d байт)</string>
+    <string name="downloads_size_progress_unknown_kb">%1$.1f%% (%2$d КБ)</string>
+    <string name="downloads_size_progress_unknown_mb">%1$.1f%% (%2$d МБ)</string>
+    <string name="downloads_size_progress_unknown_gb">%1$.1f%% (%2$d ГБ)</string>
+    <string name="downloads_starting">Починаю завантаження…</string>
+    <string name="downloads_paused_wifi">Очукування на Wi-Fi…</string>
+    <string name="downloads_paused_network">Очікування мережевого з\'єднання…</string>
+    <string name="downloads_paused_retry">Очікування повтору завантаження…</string>
+    <string name="downloads_paused_unknown">Очікування відновлення завантаження…</string>
+    <string name="downloads_failed_http">Завантаження не вдалося: помилка HTTP</string>
+    <string name="downloads_failed_mount">Завантаження не вдалося: Не знайдено накопичувач</string>
+    <string name="downloads_failed_space">Завантаження не вдалося: Бракує місця</string>
+    <string name="downloads_failed_fileexists">Завантаження не вдалося: файл вже існує</string>
+    <string name="downloads_failed_resume">Завантаження не вдалося: не вдається відновити завантаження</string>
+    <string name="downloads_failed_md5">Завантаження не вдалося: помилка MD5 - пошкоджене завантаження</string>
+    <string name="downloads_failed_unknown">Завантаження не вдалося</string>
+    <string name="downloads_none">Завантаження не знайдені</string>
+    <string name="downloads_no_status">Не вдається отримати статус завантаження</string>
+    <string name="downloads_changelog_title">Зміни:</string>
+    <string name="downloads_complete">Готово! Готовий прошити оновлення!</string>
+    <string name="downloads_file">%1$s (v%2$s)</string>
+    <string name="downloads_file_nover">%1$s</string>
+
+    <string name="settings_title">Налаштування OTA Updater</string>
+    <string name="settings_notif_title">Повідомляти мене про нові оновлення</string>
+    <string name="settings_notif_summary_off">Сповіщення про оновлення не буде показуватися.\nВам доведеться відкрити програму вручну, щоб перевірити чи є оновлення.</string>
+    <string name="settings_notif_summary_on">Буде показуватися сповіщення про оновлення</string>
+    <string name="settings_wifidl_title">Завантажувати тільки по Wi-Fi</string>
+    <string name="settings_wifidl_summary_on">Оновлення будуть завантажені тільки коли доступне підключення по Wi-Fi</string>
+    <string name="settings_wifidl_summary_off">Оновлення будуть завантажені при наявності будь-якого мережевого з\'єднання.\n\nУВАГА: Оновлення будуть завантажені через мобільний інтренет, якщо недоступний Wi-Fi. Оновлення можуть бути досить великими і, можливо, привести до значних витрат.</string>
+    <string name="settings_autodl_title">Автоматичне завантаження оновлень</string>
+    <string name="settings_autodl_summary_off">Оновлення не будуть завантажуватись автоматично.</string>
+    <string name="settings_autodl_summary_on">Оновлення будуть завантажуватись автоматично.</string>
+    <string name="settings_resetwarn_title">Скинути ігноровані попередження</string>
+    <string name="settings_resetwarn_summary">Будь-які попередження, які проігноровані, будуть показані знову.</string>
+
+    <string name="unknown_error">Сталася невідома помилка!</string>
+
+</resources>

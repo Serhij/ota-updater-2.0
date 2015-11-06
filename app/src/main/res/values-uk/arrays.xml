@@ -16,16 +16,16 @@
 
 <resources>
     <string-array name="install_options">
-        <item>Backup First</item>
-        <item>Wipe Dalvik</item>
-        <item>Wipe Cache</item>
+        <item>Бекап</item>
+        <item>Очищення Dalvik</item>
+        <item>Очищення Cache</item>
     </string-array>
     
     <string-array name="download_types">
-        <item>ROM Downloads</item>
+        <item>Завантажені оновлення</item>
         </string-array>
     
     <string-array name="download_types_empty">
-        <item>No ROM Downloads</item>
+        <item>Немає завантажених оновлень</item>
         </string-array>
 </resources>

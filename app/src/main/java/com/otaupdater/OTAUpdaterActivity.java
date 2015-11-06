@@ -92,43 +92,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
         final Context context = getApplicationContext();
         cfg = Config.getInstance(context);
 
-        if (!cfg.hasProKey()) {
-            bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"),
-                    billingSrvConn = new ServiceConnection() {
-                        @Override
-                        public void onServiceDisconnected(ComponentName name) {
-                            billingSrvConn = null;
-                        }
-
-                        @Override
-                        public void onServiceConnected(ComponentName name, IBinder binder) {
-                            IInAppBillingService service = IInAppBillingService.Stub.asInterface(binder);
-
-                            try {
-                                Bundle owned = service.getPurchases(3, getPackageName(), "inapp", null);
-                                ArrayList<String> ownedItems = owned.getStringArrayList("INAPP_PURCHASE_ITEM_LIST");
-                                ArrayList<String> ownedItemData = owned.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-
-                                if (ownedItems != null && ownedItemData != null) {
-                                    for (int q = 0; q < ownedItems.size(); q++) {
-                                        if (ownedItems.get(q).equals(Config.PROKEY_SKU)) {
-                                            JSONObject itemData = new JSONObject(ownedItemData.get(q));
-                                            cfg.setKeyPurchaseToken(itemData.getString("purchaseToken"));
-                                            break;
-                                        }
-                                    }
-                                }
-                            } catch (RemoteException ignored) {
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            unbindService(this);
-                            billingSrvConn = null;
-                        }
-                    }, Context.BIND_AUTO_CREATE);
-        }
-
         boolean data = Utils.dataAvailable(this);
         boolean wifi = Utils.wifiConnected(this);
 
@@ -185,7 +148,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
             }
         }
 
-        Utils.updateDeviceRegistration(this);
         CheckinReceiver.setDailyAlarm(this);
 
         if (!PropUtils.isRomOtaEnabled() && !cfg.getIgnoredUnsupportedWarn()) {
@@ -303,11 +265,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
             break;
         case R.id.downloads:
             i = new Intent(this, DownloadsActivity.class);
-            startActivity(i);
-            break;
-        case R.id.accounts:
-            i = new Intent(this, SettingsActivity.class);
-            i.setAction(SettingsActivity.EXTRA_SHOW_ACCOUNT_DLG);
             startActivity(i);
             break;
         default:

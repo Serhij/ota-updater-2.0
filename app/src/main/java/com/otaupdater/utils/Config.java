@@ -47,7 +47,6 @@ public class Config {
     public static final String OAUTH_CLIENT_ID = "1068482628480-jsufug7klk4b4ab2v6f83dtp5q38k74t.apps.googleusercontent.com";
 
     public static final String OTA_FEATURE_KEY = "com.otaupdater.ota_feature";
-    public static final String PROKEY_SKU = "prokey";
 
     public static final long MIN_PING_TIME = 604800000; // 1 week in ms
 
@@ -71,13 +70,6 @@ public class Config {
         //noinspection ResultOfMethodCallIgnored
         ROM_DL_PATH_FILE.mkdirs();
     }
-
-    private String gcmRegistrationId = null;
-    private boolean gcmRegVersionOverride = false;
-    private Date lastPingDate = null;
-
-    private String keyPurchaseToken = null;
-    private String redeemCode = null;
 
     private boolean showNotif = true;
     private boolean wifiOnlyDl = true;
@@ -110,15 +102,6 @@ public class Config {
         assert ctx != null;
         PREFS = ctx.getSharedPreferences(PREFS_NAME, 0);
 
-        gcmRegistrationId = PREFS.getString("gcmRegistrationId", gcmRegistrationId);
-        lastPingDate = PREFS.contains("lastPingDate") ? new Date(PREFS.getLong("lastPingDate", 0)) : null;
-
-        keyPurchaseToken = PREFS.getString("keyState", keyPurchaseToken);
-        redeemCode = PREFS.getString("redeemCode", redeemCode);
-
-        username = PREFS.getString("username", username);
-        hmacKey = PREFS.getString("hmacKey", hmacKey);
-
         showNotif = PREFS.getBoolean("showNotif", showNotif);
         wifiOnlyDl = PREFS.getBoolean("wifiOnlyDl", wifiOnlyDl);
         autoDl = PREFS.getBoolean("autoDl", autoDl);
@@ -149,56 +132,6 @@ public class Config {
     public static synchronized Config getInstance(Context ctx) {
         if (instance == null) instance = new Config(ctx);
         return instance;
-    }
-
-    public boolean hasProKey() {
-        return keyPurchaseToken != null || redeemCode != null;
-    }
-
-    public boolean isKeyRedeemCode() {
-        return redeemCode != null;
-    }
-
-    public String getGcmRegistrationId() {
-        if (gcmRegistrationId == null) return null;
-        if (lastVersion != curVersion && !gcmRegVersionOverride) return null;
-        return gcmRegistrationId;
-    }
-
-    public void setGcmRegistrationId(String id) {
-        this.gcmRegistrationId = id;
-        this.gcmRegVersionOverride = true;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putString("gcmRegistrationId", gcmRegistrationId);
-            editor.apply();
-        }
-    }
-
-    public String getKeyPurchaseToken() {
-        return keyPurchaseToken;
-    }
-
-    public void setKeyPurchaseToken(String keyPurchaseToken) {
-        this.keyPurchaseToken = keyPurchaseToken;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putString("keyState", keyPurchaseToken);
-            editor.apply();
-        }
-    }
-
-    public String getRedeemCode() {
-        return redeemCode;
-    }
-
-    public void setRedeemCode(String redeemCode) {
-        this.redeemCode = redeemCode;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putString("redeemCode", redeemCode);
-            editor.apply();
-        }
     }
 
     public boolean getShowNotif() {
@@ -292,15 +225,6 @@ public class Config {
         return curVersion == lastVersion && curDevice.equals(lastDevice) && romIdUpToDate;
     }
 
-    public boolean needPing() {
-        return lastPingDate == null || (new Date().getTime() - lastPingDate.getTime()) > MIN_PING_TIME;
-    }
-
-    public void setPingedCurrent() {
-        lastPingDate = new Date();
-        putLong("lastPingDate", lastPingDate.getTime());
-    }
-
     public boolean hasStoredRomUpdate() {
         return storedRomUpdate != null;
     }
@@ -325,42 +249,6 @@ public class Config {
             RomInfo.FACTORY.clearFromSharedPrefs(editor);
             editor.apply();
         }
-    }
-
-    public boolean isUserLoggedIn() {
-        return username != null && hmacKey != null;
-    }
-
-    public void storeLogin(String username, String hmacKey) {
-        this.username = username;
-        this.hmacKey = hmacKey;
-
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putString("username", username);
-            editor.putString("hmacKey", hmacKey);
-            editor.apply();
-        }
-    }
-
-    public void clearLogin() {
-        username = null;
-        hmacKey = null;
-
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.remove("username");
-            editor.remove("hmacKey");
-            editor.apply();
-        }
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getHmacKey() {
-        return hmacKey;
     }
 
     public void storeRomDownloadID(long downloadID) {

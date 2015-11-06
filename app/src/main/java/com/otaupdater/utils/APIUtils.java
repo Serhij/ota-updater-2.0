@@ -51,7 +51,6 @@ public class APIUtils {
         try {
             data.put("device", Utils.getDevice());
             data.put("device_id", Utils.getDeviceID(ctx));
-            data.put("reg_id", cfg.getGcmRegistrationId());
 
             if (PropUtils.isRomOtaEnabled()) data.put("rom_id", PropUtils.getRomOtaID());
 
@@ -160,14 +159,12 @@ public class APIUtils {
                 HttpClient http = new DefaultHttpClient();
 
                 String reqBody = data == null ? "" : data.toString();
-                String hmacSig = UserUtils.userHmac(ctx, reqBody);
 
                 HttpPost req = new HttpPost(Config.SITE_BASE_URL + endpoint);
 
                 req.addHeader("Content-Type", "application/json");
                 req.addHeader("Accept", "application/json");
 
-                if (hmacSig != null) req.addHeader("X-Authorization-Signature", hmacSig);
                 req.addHeader("X-API-Authentication", getOAuthToken(ctx));
                 req.addHeader("X-Device-ID", Utils.getDeviceID(ctx));
 

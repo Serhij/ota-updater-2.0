@@ -32,11 +32,4 @@
         android:layout_above="@+id/ads"
         android:layout_below="@id/downloads_bar" />
     
-    <fragment class="com.otaupdater.AdsFragment"
-        android:id="@+id/ads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        tools:layout="@layout/ads" />
-    
 </RelativeLayout>

@@ -19,11 +19,6 @@
     <PreferenceCategory
         android:title="@string/settings_title">
 
-        <Preference
-            android:title="@string/settings_account_title"
-            android:summary="@string/settings_account_summary"
-            android:key="account_pref" />
-
         <CheckBoxPreference
             android:title="@string/settings_notif_title"
             android:summaryOn="@string/settings_notif_summary_on"
@@ -50,21 +45,6 @@
             android:summary="@string/settings_resetwarn_summary"
             android:key="resetwarn_pref" />
 
-    </PreferenceCategory>
-    
-    <PreferenceCategory
-        android:title="@string/settings_support">
-        
-        <Preference 
-            android:title="@string/settings_prokey_title" 
-            android:summary="@string/settings_prokey_summary" 
-            android:key="prokey_pref" />
-        
-        <Preference 
-            android:title="@string/settings_donate_title"
-            android:summary="@string/settings_donate_summary"
-            android:key="donate_pref" />
-        
     </PreferenceCategory>
 
 </PreferenceScreen>

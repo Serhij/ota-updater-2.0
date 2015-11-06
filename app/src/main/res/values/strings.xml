@@ -138,28 +138,6 @@
     <string name="settings_autodl_summary_on">Updates will be downloaded automatically.</string>
     <string name="settings_resetwarn_title">Reset ignored warnings</string>
     <string name="settings_resetwarn_summary">Any warnings that have been ignored will be shown again.</string>
-    <string name="settings_support">Support Development</string>
-    <string name="settings_prokey_title">Buy PRO Key</string>
-    <string name="settings_prokey_title_pro">PRO Key</string>
-    <string name="settings_prokey_summary">Buying a PRO Key will disable ads and help us pay the costs of running this service</string>
-    <string name="settings_prokey_summary_pro">Thank you for buying the PRO Key.\nWe appreciate your support!</string>
-    <string name="settings_prokey_summary_nomarket">Unfortunately, you cannot buy a PRO Key because you do not have the Play Store installed.</string>
-    <string name="settings_prokey_summary_redeemed">You have redeemed a PRO Key code!\nCode used: %1$s</string>
-    <!--<string name="settings_prokey_summary_verify">Thank you for buying the PRO Key!\nVerification did not complete last time, tap to try again..</string>-->
-    <!--<string name="settings_prokey_summary_verifying">Thank you for buying the PRO Key!\nKey verification in progress…</string>-->
-    <string name="settings_prokey_redeeming">Redeeming…</string>
-    <string name="settings_donate_title">Donate</string>
-    <string name="settings_donate_summary">Any donations are greatly accepted and go directly to pay hosting and development costs</string>
-
-    <string name="prokey_thanks">Thank you for buying the PRO Key!!!\n\nAll of the money goes to pay for hosting costs in order to provide you with the best possible service.\n\nPlease enjoy all of the features of our app, along with no ads!\nThanks again for the support!</string>
-    <string name="prokey_redeemed_thanks">You have redeemed a PRO Key code!\n\nThank you for your support. Please spread the word about this app so we can continue to grow and provide the best possible OTA service!</string>
-    <string name="prokey_error_init">Error starting PRO Key purchase! Try again later.</string>
-    <string name="prokey_error_cancelled">PRO Key purchase cancelled!</string>
-    <string name="prokey_error_other">Error occurred during PRO Key purchase!</string>
-    <string name="prokey_success">PRO Key purchased successfully! Thank you!</string>
-    <string name="prokey_only_feature_title">PRO-only Feature</string>
-    <string name="prokey_only_feature_message">This feature is only available to PRO Key users.\nPlease obtain a PRO Key in order to use this feature.</string>
-    <string name="prokey_only_get">Get PRO Key</string>
 
     <string name="unknown_error">An unknown error has occurred!</string>
 
