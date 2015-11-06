@@ -38,7 +38,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.android.vending.billing.IInAppBillingService;
 import com.otaupdater.utils.BaseDownloadDialogActivity;
 import com.otaupdater.utils.Config;
 import com.otaupdater.utils.PropUtils;
@@ -63,27 +62,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
     private Config cfg;
 
     private ActionBar bar;
-
-    private ServiceConnection billingSrvConn = null;
-
-    private final Handler adsHandler = new AdsHandler(this);
-
-    private static class AdsHandler extends Handler {
-        private final WeakReference<OTAUpdaterActivity> act;
-
-        public AdsHandler(OTAUpdaterActivity act) {
-            this.act = new WeakReference<OTAUpdaterActivity>(act);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            OTAUpdaterActivity act = this.act.get();
-            if (act == null) return;
-            Fragment adFragment = act.getFragmentManager().findFragmentById(R.id.ads);
-            if (adFragment != null)
-                act.getFragmentManager().beginTransaction().show(adFragment).commit();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,7 +205,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        adsHandler.sendMessageDelayed(adsHandler.obtainMessage(), Config.AD_SHOW_DELAY);
     }
 
     @Override
@@ -239,12 +216,10 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        adsHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
     protected void onDestroy() {
-        if (billingSrvConn != null) unbindService(billingSrvConn);
         super.onDestroy();
     }
 
