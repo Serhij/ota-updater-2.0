@@ -80,7 +80,7 @@
     <string name="toast_update_fetch_error">Ошибка получения информации про обновление</string>
     <string name="toast_downloading">Загрузка в процессе, проверьте состояние в уведомлениях…</string>
 
-    <string name="updates_avail_title">Доступны обновления</string>
+    <string name="updates_avail_title">Доступные обновления</string>
     <string name="updates_checking">Проверка доступных обновлений…</string>
     <string name="updates_none">Нет доступных обновлений. Нажмите для проверки.</string>
     <string name="update_fetch_error">Ошибка получения информации про обновление: %1$s</string>
