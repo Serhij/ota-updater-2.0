@@ -28,19 +28,13 @@ public class Config {
 
     public static final String HTTPC_UA = "OTA Updater App";
 
-    public static final String GPLUS_URL = "https://plus.google.com/102074511541445644953/posts";
-
     public static final String SITE_BASE_URL = "https://www.otaupdatecenter.pro/";
     public static final String WEB_FEEDBACK_URL = "contact-us";
-    public static final String DONATE_URL = "donate";
     public static final String LOGIN_URL = "device/user/login";
     public static final String LOGOUT_URL = "device/user/logout";
-    public static final String CODE_REDEEM_URL = "device/user/redeem_code";
     public static final String GCM_REGISTER_URL = "device/register";
     public static final String PING_URL = "device/ping";
     public static final String ROM_PULL_URL = "device/info/rom";
-
-    public static final String ADMOB_UNIT_ID = "ca-app-pub-0361534644858126/7580389175";
 
     public static final String HMAC_ALGORITHM = "HmacSHA256";
     public static final String GCM_SENDER_ID = "1068482628480";
@@ -53,8 +47,6 @@ public class Config {
     public static final int ROM_NOTIF_ID = 100;
     public static final int ROM_FAILED_NOTIF_ID = 101;
     public static final int ROM_FLASH_NOTIF_ID = 102;
-
-    public static final int AD_SHOW_DELAY = 3000;
 
     public static final String BASE_SD_PATH = "/OTA-Updater/download/";
     public static final String BASE_DL_PATH = PropUtils.getSystemSdPath() + BASE_SD_PATH;

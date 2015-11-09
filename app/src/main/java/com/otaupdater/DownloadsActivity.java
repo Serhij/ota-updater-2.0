@@ -59,22 +59,7 @@ public class DownloadsActivity extends BaseDownloadDialogActivity implements Act
 
     private DownloadListFragment dlFragment = null;
 
-    private final Handler adsHandler = new AdsHandler(this);
     private ActionBar bar;
-
-    private static class AdsHandler extends Handler {
-        private final WeakReference<DownloadsActivity> act;
-
-        public AdsHandler(DownloadsActivity act) {
-            this.act = new WeakReference<DownloadsActivity>(act);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            Fragment adFragment = act.get().getFragmentManager().findFragmentById(R.id.ads);
-            if (adFragment != null) act.get().getFragmentManager().beginTransaction().show(adFragment).commit();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +112,6 @@ public class DownloadsActivity extends BaseDownloadDialogActivity implements Act
     @Override
     protected void onResume() {
         super.onResume();
-        adsHandler.sendMessageDelayed(adsHandler.obtainMessage(), Config.AD_SHOW_DELAY);
     }
 
     @Override
@@ -255,6 +239,10 @@ public class DownloadsActivity extends BaseDownloadDialogActivity implements Act
             os.writeBytes("mkdir -p /cache/recovery/\n");
             os.writeBytes("rm -f /cache/recovery/openrecoveryscript\n");
 
+                for (String file: files) {
+                    os.writeBytes("echo 'install " + file + "' >> /cache/recovery/openrecoveryscript\n");
+                }
+
                 if (backup) {
                     os.writeBytes("echo 'backup SDBOM' >> /cache/recovery/openrecoveryscript\n");
                 }
@@ -263,10 +251,6 @@ public class DownloadsActivity extends BaseDownloadDialogActivity implements Act
                 }
                 if (wipeCache) {
                     os.writeBytes("echo 'wipe cache' >> /cache/recovery/openrecoveryscript\n");
-                }
-
-                for (String file: files) {
-                    os.writeBytes("echo 'install " + file + "' >> /cache/recovery/openrecoveryscript\n");
                 }
 
             String rebootCmd = PropUtils.getRebootCmd();

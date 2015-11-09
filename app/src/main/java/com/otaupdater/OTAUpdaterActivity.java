@@ -168,9 +168,6 @@ public class OTAUpdaterActivity extends BaseDownloadDialogActivity {
 
         setContentView(R.layout.main);
 
-        Fragment adFragment = getFragmentManager().findFragmentById(R.id.ads);
-        if (adFragment != null) getFragmentManager().beginTransaction().hide(adFragment).commit();
-
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 
         bar = getActionBar();

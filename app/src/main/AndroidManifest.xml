@@ -65,20 +65,6 @@
         </receiver>
 
         <service android:name=".GCMIntentService" />
-        
-        <activity
-            android:name=".LicenseActivity"
-            android:label="@string/app_license">
-            
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".OTAUpdaterActivity" />
-        </activity>
-        
-        <activity 
-            android:name=".ContributorsActivity"
-            android:label="@string/app_contrib">
-            
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".OTAUpdaterActivity" />
-        </activity>
 
         <activity
             android:name=".SettingsActivity"

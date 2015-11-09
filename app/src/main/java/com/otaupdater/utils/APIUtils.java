@@ -40,10 +40,6 @@ public class APIUtils {
         new APITask(ctx, Config.LOGOUT_URL, null, callback).execute();
     }
 
-    public static void redeemCode(Context ctx, APICallback callback) {
-        new APITask(ctx, Config.CODE_REDEEM_URL, null, callback).execute();
-    }
-
     public static void updateDeviceRegistration(Context ctx, APICallback callback) {
         final Config cfg = Config.getInstance(ctx);
 

@@ -17,8 +17,6 @@
 <resources>
 
     <string name="app_name">OTA Updater</string>
-    <string name="app_license">Ліцензія</string>
-    <string name="app_contrib">Автори</string>
     <string name="app_downloads">Завантаження</string>
     <string name="app_settings">Налаштування</string>
 
