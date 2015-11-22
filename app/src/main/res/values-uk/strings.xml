@@ -38,7 +38,7 @@
     <string name="rom_download_ticker">Доступне оновлення прошивки</string>
     <string name="rom_download_title">Доступне оновлення прошивки: %1$s</string>
     <string name="rom_download_details">Доступне оновлення прошивки\n\nВерсія: %1$s\nЗміни:\n%2$s</string>
-    <string name="rom_download_progress">Завантаження оновлення прошивки</string>
+    <string name="rom_download_progress">Завантаження оновлення</string>
     <string name="rom_download_failed">Не вдалося завантажити оновлення прошивки</string>
     <string name="rom_download_done">Завантаження оновлення прошивки завершено</string>
     <string name="rom_download_alert_title">Завантаження оновлення прошивки (%1$s версія %2$s)</string>
